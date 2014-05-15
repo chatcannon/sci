@@ -3,7 +3,7 @@
 # $Header: $
 
 EAPI=5
-CMAKE_MIN_VERSION=2.8
+CMAKE_MIN_VERSION=2.8.3
 PYTHON_COMPAT=( python{2_6,2_7} )
 
 inherit cmake-utils python-single-r1 user
@@ -20,6 +20,7 @@ IUSE="boinc cgroup contrib curl dmtcp doc kerberos libvirt management minimal po
 REQUIRED_USE="python? ( ${PYTHON_REQUIRED_USE} )"
 
 CDEPEND="sys-libs/zlib
+	>=dev-lang/perl-5.005
 	>=dev-libs/libpcre-7.6
 	>=dev-libs/boost-1.49.0[${PYTHON_USEDEP}]
 	net-nds/openldap
