@@ -26,7 +26,7 @@ CDEPEND="sys-libs/zlib
 	net-nds/openldap
 	boinc? ( sci-misc/boinc )
 	cgroup? ( >=dev-libs/libcgroup-0.37 )
-	curl? ( >=net-misc/curl-7.19.7[ssl?] )
+	curl? ( >=net-misc/curl-7.31.0-p1[ssl?] )
 	dmtcp? ( sys-apps/dmtcp )
 	libvirt? ( >=app-emulation/libvirt-0.6.2 )
 	kerberos? ( virtual/krb5 )
@@ -68,8 +68,9 @@ src_configure() {
 	# PROPER tells condor to use system libraries rather than copies included in the source
 	local mycmakeargs="
 		-DPROPER=ON
-		-DCONDOR_PACKAGE_BUILD=ON
-		-DCMAKE_INSTALL_PREFIX=/
+		-DCONDOR_PACKAGE_BUILD=OFF
+		-DCMAKE_INSTALL_PREFIX=${EPREFIX}/
+		-DCONDOR_STRIP_PACKAGES=OFF
 		-DWITH_BLAHP=OFF
 		-DWITH_CAMPUSFACTORY=OFF
 		-DWITH_CLUSTER_RA=OFF
