@@ -19,7 +19,7 @@ IUSE="boinc cgroup contrib curl dmtcp doc kerberos libvirt management minimal po
 
 REQUIRED_USE="python? ( ${PYTHON_REQUIRED_USE} )"
 
-CDEPEND="sys-libs/zlib
+CDEPEND=">=sys-libs/zlib-1.2.3
 	>=dev-lang/perl-5.005
 	>=dev-libs/libpcre-7.6
 	>=dev-libs/boost-1.49.0[${PYTHON_USEDEP}]
@@ -65,9 +65,7 @@ src_prepare() {
 src_configure() {
 	# All the hard coded -DWITH_X=OFF flags are for packages that aren't in portage
 	# I also haven't included support for HAVE_VMWARE because I don't know what it requires
-	# PROPER tells condor to use system libraries rather than copies included in the source
 	local mycmakeargs="
-		-DPROPER=ON
 		-DCONDOR_PACKAGE_BUILD=OFF
 		-DCMAKE_INSTALL_PREFIX=${EPREFIX}/
 		-DCONDOR_STRIP_PACKAGES=OFF
@@ -95,12 +93,34 @@ src_configure() {
 		$(cmake-utils_use_with postgres POSTGRESQL)
 		$(cmake-utils_use_with python PYTHON_BINDINGS)
 		$(cmake-utils_use_with management)
-		$(cmake-utils_use minimal CLIPPED)
 		$(cmake-utils_use_with soap AVIARY)
 		$(cmake-utils_use_with soap GSOAP)
 		$(cmake-utils_use_with ssl OPENSSL)
 		$(cmake-utils_use_build test TESTING)
 		$(cmake-utils_use_with xml LIBXML2)"
+
+	# Separating out the 'minimal' use flag
+	#
+	# PROPER tells condor to use system libraries rather than copies bundled in the source
+	# PROPER is incompatible with the standard universe, because the same version of glibc
+	# must be used on all the systems in the cluster - Condor will use the bundled glibc
+	#
+	# Possible TODO - patch the CondorConfigure.cmake to try building the standard universe
+	# with the system glibc
+	if use minimal
+	then
+		mycmakeargs+="
+			-DPROPER=ON
+			-DCLIPPED=ON
+			-DWANT_FULL_DEPLOYMENT=OFF
+			-DSTD_UNIVERSE=OFF"
+	else
+		mycmakeargs+="
+			-DPROPER=OFF
+			-DCLIPPED=OFF
+			-DWANT_FULL_DEPLOYMENT=ON
+			-DSTD_UNIVERSE=ON"
+	fi
 	cmake-utils_src_configure
 }
 
