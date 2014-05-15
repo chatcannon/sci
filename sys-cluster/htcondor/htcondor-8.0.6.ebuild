@@ -26,7 +26,7 @@ CDEPEND=">=sys-libs/zlib-1.2.3
 	net-nds/openldap
 	boinc? ( sci-misc/boinc )
 	cgroup? ( >=dev-libs/libcgroup-0.37 )
-	curl? ( >=net-misc/curl-7.31.0-p1[ssl?] )
+	curl? ( >=net-misc/curl-7.31.1[ssl?] )
 	dmtcp? ( sys-apps/dmtcp )
 	libvirt? ( >=app-emulation/libvirt-0.6.2 )
 	kerberos? ( virtual/krb5 )
@@ -67,7 +67,7 @@ src_configure() {
 	# I also haven't included support for HAVE_VMWARE because I don't know what it requires
 	local mycmakeargs="
 		-DCONDOR_PACKAGE_BUILD=OFF
-		-DCMAKE_INSTALL_PREFIX=${EPREFIX}/
+		-DCMAKE_INSTALL_PREFIX='${EPREFIX}/'
 		-DCONDOR_STRIP_PACKAGES=OFF
 		-DWITH_BLAHP=OFF
 		-DWITH_CAMPUSFACTORY=OFF
